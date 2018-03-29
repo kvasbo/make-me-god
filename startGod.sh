@@ -1,6 +1,6 @@
 #!/bin/bash
 # My example bash script
-
+bash ./buildDocker.sh
 docker stop makemegod
 docker rm makemegod
 # docker run -d -P -p 666:80 --name makemegod -v src:/var/make_me_god registry.gitlab.com/kvasbo/make_me_god:latest tail -f /dev/null

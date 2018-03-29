@@ -1,4 +1,5 @@
 #! /bin/bash
+exec &>> bashlog.log
 
 # start timer
 T="$(date +%s)"

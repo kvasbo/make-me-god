@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 
 session_start();
 $id = $_SESSION[id];
@@ -16,9 +17,14 @@ $thefile = "../bibles/".$filename.".pdf";;
 if($_SESSION[filename] != $filename && !is_file($thefile) && strlen($god) > 0)
 {
 	$_SESSION[filename] = $filename;
-	
-	// exec("/bin/bash ../bible.sh ".$filename." > /dev/null 2>&1 &");
-	exec("/bin/bash ../bible.sh ".$filename);
+
+  // exec("bash ../bible.sh ".$filename." > err.txt 2>&1");
+  $command = "/bin/bash ../bible.sh ".$filename." > err.txt 2>&1 &";
+  echo "\r\ncommand: ".$command;
+  echo "\r\ngod: ".$god;
+  echo "\r\nfilename: ".$filename;
+  echo "\r\nthefile: ".$thefile;
+	echo exec($command);
 	
 	echo "Starting Bible creation process...";
 }
@@ -31,7 +37,7 @@ elseif(is_file($thefile))
 else
 {
 	echo "Creation is underway. Please wait.";
-	echo $_SESSION['progress'];
+  echo $_SESSION['progress'];
 	$_SESSION[progress] = $_SESSION[progress].".";
 }
 

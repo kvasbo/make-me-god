@@ -8,11 +8,13 @@ RUN apt-get update && apt-get install -y \
   curl
 
 #Lag arbeidskatalog
-RUN mkdir /var/makemegod
 # WORKDIR /var/makemegod
 COPY ./src/ /var/www/html
 
-VOLUME makemegod:/var/makemegod
+RUN mkdir -p /var/www/html/bibles
+RUN mkdir -p /var/www/html/workfiles
+
+RUN chmod 777 /var/www/html/workfiles
 
 # RUN service apache2 start
 
