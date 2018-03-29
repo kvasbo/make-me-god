@@ -11,19 +11,20 @@ $filename = preg_replace("[^A-Za-z0-9]", "", $filename);
 
 if(strlen($filename) == 0) $filename = md5(mktime("ymdhis"));
 
-$thefile = "../bibles/".$filename.".pdf";;
+$thefile = "/var/www/html/bibles/".$filename.".pdf";
+$command = "bash /var/www/html/bible.sh ".$filename." > /var/www/html/workfiles/err.txt 2>&1 &";
+
+echo "\r\ncommand: ".$command;
+echo "\r\ngod: ".$god;
+echo "\r\nfilename: ".$filename;
+echo "\r\nthefile: ".$thefile;
 
 //Create file
 if($_SESSION[filename] != $filename && !is_file($thefile) && strlen($god) > 0)
 {
 	$_SESSION[filename] = $filename;
 
-  // exec("bash ../bible.sh ".$filename." > err.txt 2>&1");
-  $command = "/bin/bash ../bible.sh ".$filename." > err.txt 2>&1 &";
-  echo "\r\ncommand: ".$command;
-  echo "\r\ngod: ".$god;
-  echo "\r\nfilename: ".$filename;
-  echo "\r\nthefile: ".$thefile;
+
 	echo exec($command);
 	
 	echo "Starting Bible creation process...";

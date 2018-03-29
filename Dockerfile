@@ -15,6 +15,7 @@ RUN mkdir -p /var/www/html/bibles
 RUN mkdir -p /var/www/html/workfiles
 
 RUN chmod 777 /var/www/html/workfiles
+RUN chmod 777 /var/www/html/bibles
 
 # RUN service apache2 start
 
