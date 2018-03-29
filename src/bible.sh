@@ -4,6 +4,7 @@
 T="$(date +%s)"
 
 mkdir -p workfiles
+mkdir -p bibles
 cd workfiles
 echo "s/god/"$1"/g" > $1.sed
 sed -f $1.sed ../templates/base.tex.base > base.$1.tex
