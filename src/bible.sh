@@ -3,10 +3,8 @@
 # start timer
 T="$(date +%s)"
 
-mkdir -p workfiles
-mkdir -p bibles
 cd workfiles
-echo "s/god/"$1"/g" > $1.sed
+echo "s/god/"$1"/ig" > $1.sed
 sed -f $1.sed ../templates/base.tex.base > base.$1.tex
 sed 's/base/base.'$1'/g' ../templates/bible.tex.base > bible.$1.tex
 
@@ -23,4 +21,4 @@ rm latexoutput.txt
 
 T="$(($(date +%s)-T))"
 
-echo "Bible created: "$1" Time spent: "$T | mail -s "Bible created: "$1 "audun@kvasbo.no"
+echo "Bible created: "$1" Time spent: "$T

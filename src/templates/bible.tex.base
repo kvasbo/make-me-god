@@ -5,7 +5,6 @@
 \usepackage[latin1]{inputenc}	% valg av tegnsett
 \usepackage[english]{babel}		% engelske titler
 
-
 \textheight 215mm
 
 \begin{document}

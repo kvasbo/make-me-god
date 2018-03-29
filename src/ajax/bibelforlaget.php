@@ -17,14 +17,15 @@ if($_SESSION[filename] != $filename && !is_file($thefile) && strlen($god) > 0)
 {
 	$_SESSION[filename] = $filename;
 	
-	exec("/bin/bash ../bible.sh ".$filename." > /dev/null 2>&1 &");
+	// exec("/bin/bash ../bible.sh ".$filename." > /dev/null 2>&1 &");
+	exec("/bin/bash ../bible.sh ".$filename);
 	
 	echo "Starting Bible creation process...";
 }
 elseif(is_file($thefile))
 {
 	touch($thefile);
-	echo "Your Bible is ready. Click <a href='http://makemegod.com/bibles/$filename.pdf'>here</a> to download.";
+	echo "Your Bible is ready. Click <a href='bibles/$filename.pdf'>here</a> to download.";
 	$_SESSION[progress] = "";
 }
 else

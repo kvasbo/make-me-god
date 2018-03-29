@@ -35,7 +35,7 @@ if(!isset($_SESSION[ip]))
 <title>Make Me God</title>
 <link rel = "stylesheet" type="text/css" href="style.css">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<script src="/javascript/prototype.js" type="text/javascript"></script>
+<script src="prototype.js" type="text/javascript"></script>
 
 <?PHP
 if($_POST[create] == "y" && strlen($_POST[god]) > 0)
@@ -83,9 +83,9 @@ if($_POST[create] != "y")
 <div id='inputbox'>
 
 <form method='post' id='godform' name='godform'  action='index.php'>
-<input type='text' disabled id='god' value="Coming soon"  maxlength='30' name='god'><br>
+<input type='text' id='god' value=""  maxlength='30' name='god'><br>
 <input type='hidden' name='create' value='y'>
-<input type='submit' disabled value='Make me god!'>
+<input type='submit' value='Make me god!'>
 </form>
 
 </div>
@@ -107,29 +107,8 @@ else {
 ?>
 
 <div style="text-align: center; margin-top: 50px">
-&copy; <?PHP echo date("Y"); ?> <a href="www.skeib.com">Audun Kvasb&oslash;</a>
+&copy; <?PHP echo date("Y"); ?> <a href="http://www.kvasbo.no">Audun Kvasb&oslash;</a>
 </div>
 
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-61151-3");
-pageTracker._initData();
-pageTracker._trackPageview();
-</script>
-
-<!-- Start of StatCounter Code -->
-<script type="text/javascript">
-var sc_project=4294065; 
-var sc_invisible=1; 
-var sc_partition=54; 
-var sc_click_stat=1; 
-var sc_security="b87e3aa6"; 
-</script>
-
-<script type="text/javascript" src="http://www.statcounter.com/counter/counter_xhtml.js"></script><noscript><div class="statcounter"><a title="hit counter" class="statcounter" href="http://www.statcounter.com/free_hit_counter.html"><img class="statcounter" src="http://c.statcounter.com/4294065/0/b87e3aa6/1/" alt="hit counter" ></a></div></noscript>
-<!-- End of StatCounter Code -->
 </body>
 </html>
