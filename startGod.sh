@@ -1,5 +1,4 @@
 #!/bin/bash
-# My example bash script
 bash ./buildDocker.sh
 docker stop makemegod
 docker rm makemegod

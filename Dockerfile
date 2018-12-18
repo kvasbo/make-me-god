@@ -1,5 +1,5 @@
 # docker build -t kvasbo/makemegod:latest .
-FROM php:7.0-apache
+FROM php:7.3-apache
 MAINTAINER Audun Kvasbø <audun@kvasbo.no>
 
 #Latex and update
