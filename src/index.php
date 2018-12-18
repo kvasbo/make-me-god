@@ -18,10 +18,10 @@ foreach ($files as $num => $fname){
 }
 }
 
-if(!isset($_SESSION[ip]))
+if(!isset($_SESSION['ip']))
 {
-	$_SESSION[ip] = $_SERVER['REMOTE_ADDR']; 
-	$_SESSION[id] = md5($_SESSION[ip].date("dmyhis"));
+	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR']; 
+	$_SESSION['id'] = md5($_SESSION['ip'].date("dmyhis"));
 	session_cache_expire(3600);
 }
 
@@ -38,7 +38,7 @@ if(!isset($_SESSION[ip]))
 <script src="prototype.js" type="text/javascript"></script>
 
 <?PHP
-if($_POST[create] == "y" && strlen($_POST[god]) > 0)
+if($_POST['create'] == "y" && strlen($_POST['god']) > 0)
 {
 	//Notify me by mail
 	$mail="audun@kvasbo.no";
@@ -75,9 +75,9 @@ Event.observe(window, 'load', function() {
 
 <?PHP
 
-if($_POST[create] != "y")
+if($_POST['create'] != "y")
 {
-	$_SESSION[progress] = "";
+	$_SESSION['progress'] = "";
 	
 ?>
 <div id='inputbox'>
