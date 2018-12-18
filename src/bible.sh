@@ -4,7 +4,7 @@
 T="$(date +%s)"
 
 cd /var/www/html/workfiles
-echo "s/god/"$1"/ig" > $1.sed
+echo "s/tullegud/"$1"/ig" > $1.sed
 sed -f $1.sed /var/www/html/templates/base.tex.base > base.$1.tex
 sed 's/base/base.'$1'/g' /var/www/html/templates/bible.tex.base > bible.$1.tex
 
