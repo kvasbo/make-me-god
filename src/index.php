@@ -1,4 +1,5 @@
 <?php
+session_cache_expire(3600);
 session_start();
 
 //Housekeeping
@@ -22,7 +23,6 @@ if(!isset($_SESSION['ip']))
 {
 	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR']; 
 	$_SESSION['id'] = md5($_SESSION['ip'].date("dmyhis"));
-	session_cache_expire(3600);
 }
 
 ?>
@@ -42,12 +42,12 @@ if($_POST['create'] == "y" && strlen($_POST['god']) > 0)
 {
 	//Notify me by mail
 	$mail="audun@kvasbo.no";
-	$title="[makemegod] Bible ordered: ".$_POST[god];
-	$message="Bible ordered with the name ".$_POST[god];
+	$title="[makemegod] Bible ordered: ".$_POST['god'];
+	$message="Bible ordered with the name ".$_POST['god'];
 	mail($mail, $title, $message);
 
 
-	$god = addslashes(strip_tags($_POST[god]));
+	$god = addslashes(strip_tags($_POST['god']));
 	$god = base64_encode($god);
 ?>
 
