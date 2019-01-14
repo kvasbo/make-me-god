@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 
 session_start();
-$id = $_SESSION[id];
+$id = $_SESSION['id'];
 $god = base64_decode($_GET['god']);
 $filename = str_replace(" ", ".", $god);
 
@@ -22,9 +22,9 @@ echo "\r\nthefile: ".$thefile;
 */
 
 //Create file
-if($_SESSION[filename] != $filename && !is_file($thefile) && strlen($god) > 0)
+if($_SESSION['filename'] != $filename && !is_file($thefile) && strlen($god) > 0)
 {
-	$_SESSION[filename] = $filename;
+	$_SESSION['filename'] = $filename;
 
 	echo exec($command);
 	
@@ -34,13 +34,13 @@ elseif(is_file($thefile))
 {
 	touch($thefile);
 	echo "Your Bible is ready. Click <a href='bibles/$filename.pdf'>here</a> to download.";
-	$_SESSION[progress] = "";
+	$_SESSION['progress'] = "";
 }
 else
 {
 	echo "Creation is underway. Please wait.";
   echo $_SESSION['progress'];
-	$_SESSION[progress] = $_SESSION[progress].".";
+	$_SESSION['progress'] = $_SESSION['progress'].".";
 }
 
 ?>
