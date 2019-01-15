@@ -1,1 +1,0 @@
-docker build -t kvasbo/make_me_god .
