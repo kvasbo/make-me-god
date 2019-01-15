@@ -1,4 +1,9 @@
-build:frontend:
+stages:
+  - build
+  - tag
+  - deploy
+
+frontend:build:
   stage: build
   image: node:8
   script:
@@ -12,7 +17,40 @@ build:frontend:
     - src/makemegod-client/build
     expire_in: 1 week
 
-deploy:
+backend:build:
+  stage: build
+  image: docker:stable
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+  - docker:dind 
+  script:
+  - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+  # Build
+  - cd /builds/kvasbo/Make_Me_God/src/backend/
+  - docker build -t kvasbo/makemegod-backend:dev-$CI_COMMIT_REF_NAME .
+  - docker push kvasbo/makemegod-backend:dev-$CI_COMMIT_REF_NAME
+  # End build
+
+backend:tag:
+  stage: tag
+  image: docker:stable
+  only:
+  - master
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+  - docker:dind 
+  script:
+  # Tag latest version
+  - docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
+  - docker pull kvasbo/makemegod-backend:dev-$CI_COMMIT_REF_NAME
+  - docker tag kvasbo/makemegod-backend:dev-$CI_COMMIT_REF_NAME kvasbo/makemegod-backend:latest
+  - docker push kvasbo/makemegod-backend:latest
+
+frontend:deploy:
   stage: deploy
   only:
   - master
@@ -20,7 +58,7 @@ deploy:
   variables:
     AWS_BUCKET_NAME: makemegod.com
   dependencies:
-  - build:frontend
+  - frontend:build
   script:
   # Start amazon setup
   - apt-get update && apt-get install curl unzip -y
@@ -29,3 +67,16 @@ deploy:
   - ./awscli-bundle/install -b ~/bin/aws
   # Deploy frontend
   - /root/bin/aws s3 sync /builds/kvasbo/Make_Me_God/src/makemegod-client/build/ "s3://${AWS_BUCKET_NAME}/" --cache-control "max-age=0"
+
+# backend:deploy:
+#  stage: deploy
+#  only:
+#  - master
+#  - allnew
+#  image: python:latest
+#  script:
+#  # Start amazon setup
+#  - pip install awsebcli --upgrade --user
+#  # Deploy backend
+#  - cd /builds/kvasbo/Make_Me_God/src/backend/
+#  - ~/.local/bin/eb deploy -m "$CI_COMMIT_REF_NAME $CI_COMMIT_SHORT_SHA" --l $CI_COMMIT_SHORT_SHA

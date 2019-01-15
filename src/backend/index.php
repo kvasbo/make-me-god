@@ -1,6 +1,6 @@
 <?php
 
-header('Access-Control-Allow-Origin: https://wwww.makemegod.com');
+header('Access-Control-Allow-Origin: http://makemegod.com');
 
 $god = base64_decode($_GET['god']);
 $filename = str_replace(" ", ".", $god);
