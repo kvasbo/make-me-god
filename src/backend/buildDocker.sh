@@ -1,1 +1,1 @@
-docker build -t kvasbo/make_me_god_backend .
+docker build -t kvasbo/makemegod-backend .

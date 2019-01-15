@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "kvasbo/make_me_god_backend",
+    "Name": "kvasbo/makemegod-backend",
     "Update": "true"
   },
   "Ports": [

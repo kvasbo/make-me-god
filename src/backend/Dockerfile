@@ -1,11 +1,6 @@
 # docker build -t kvasbo/makemegod:latest .
-FROM php:7.3-apache
+FROM kvasbo/makemegod-base
 MAINTAINER Audun Kvasbø <audun@kvasbo.no>
-
-#Latex and update
-RUN apt-get update && apt-get install -y \
-	texlive \
-  curl
 
 #Lag arbeidskatalog
 # WORKDIR /var/makemegod
