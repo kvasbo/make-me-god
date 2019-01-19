@@ -1,17 +1,27 @@
 # docker build -t kvasbo/makemegod:latest .
-FROM kvasbo/makemegod-base
+FROM node:8
 MAINTAINER Audun Kvasbø <audun@kvasbo.no>
 
-#Lag arbeidskatalog
-# WORKDIR /var/makemegod
-COPY . /var/www/html
+RUN apt-get update
+RUN apt-get install -y \
+	texlive \
+  curl \
+  sudo \
+  nano
 
-RUN mkdir -p /var/www/html/bibles
-RUN mkdir -p /var/www/html/workfiles
+# Create work folder and copy files
+RUN mkdir -p /makemegod
+RUN mkdir -p /makemegod/bibles
+RUN mkdir -p /makemegod/service
+RUN mkdir -p /makemegod/workfiles
+RUN chmod 777 /makemegod/bibles
+RUN chmod 777 /makemegod/service
+RUN chmod 777 /makemegod/workfiles
 
-RUN chmod 777 /var/www/html/workfiles
-RUN chmod 777 /var/www/html/bibles
+COPY ./templates /makemegod/templates
+COPY ./service /makemegod/service/
 
-# RUN service apache2 start
+WORKDIR /makemegod/service
+CMD [ "node", "index.js" ]
 
-EXPOSE 80
+EXPOSE 8080
