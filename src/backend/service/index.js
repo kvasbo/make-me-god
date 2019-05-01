@@ -1,21 +1,21 @@
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const uuidv4 = require("uuid/v4");
-const fs = require('fs');
+const fs = require("fs");
 const AWS = require("aws-sdk");
 AWS.config.loadFromPath("./awsCredentials.json");
-var express = require('express');
+var express = require("express");
 var app = express();
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
+app.get("/", function(req, res) {
+  res.send("Hello World!");
 });
 
 const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
-const s3 = new AWS.S3({apiVersion: '2006-03-01'});
+const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
-app.listen(8080, function () {
-  console.log('Bible creator listening on port ' + 8080 + '!');
+app.listen(8080, function() {
+  console.log("Bible creator listening on port " + 8080 + "!");
 });
 
 class queue {
@@ -45,22 +45,22 @@ class queue {
     var params = {
       DelaySeconds: 2,
       MessageAttributes: {
-       "name": {
-         DataType: "String",
-         StringValue: name,
-        },
+        name: {
+          DataType: "String",
+          StringValue: name
+        }
       },
       MessageBody: `Bible ordered: ${name}`,
       QueueUrl: this.url
-     };
-     
-     sqs.sendMessage(params, function(err, data) {
-       if (err) {
-         console.log("Error", err);
-       } else {
-         console.log("Q Added", data.MessageId);
-       }
-     });
+    };
+
+    sqs.sendMessage(params, function(err, data) {
+      if (err) {
+        console.log("Error", err);
+      } else {
+        console.log("Q Added", data.MessageId);
+      }
+    });
   }
 
   async checkQueue() {
@@ -76,28 +76,32 @@ class queue {
       if (err) {
         console.log("Receive Error", err);
       } else if (data.Messages) {
-       
-        var deleteParams = {
-          QueueUrl: this.url,
-          ReceiptHandle: data.Messages[0].ReceiptHandle
-        };
-
-        sqs.deleteMessage(deleteParams, (err, data) => {
-          if (err) {
-            console.log("Delete Error", err);
-          } else {
-            console.log("Q: Message Deleted", data);
-          }
-        });
-
         // Do the stuff
         try {
-        const name = data.Messages[0].MessageAttributes.name.StringValue;
-        await createBible(name);
-      } catch (err) {
-        console.log('E: Malformed message')
-      }
-        
+          const name = data.Messages[0].MessageAttributes.name.StringValue;
+          await createBible(name);
+        } catch (err) {
+          console.log("E: Malformed message");
+        }
+
+        // Await deletion
+        await new Promise((resolve, reject) => {
+          sqs.deleteMessage(
+            {
+              QueueUrl: this.url,
+              ReceiptHandle: data.Messages[0].ReceiptHandle
+            },
+            (err, data) => {
+              if (err) {
+                console.log("Delete Error", err);
+                reject();
+              } else {
+                console.log("Q: Message Deleted", data);
+                resolve();
+              }
+            }
+          );
+        });
       }
     });
     console.log("Q: Checking queue");
@@ -128,20 +132,23 @@ async function createBible(name) {
     // Upload
     const fileData = fs.readFileSync(`${workDir}/${fileName}.pdf`);
     var params = {
-      Body: fileData, 
-      Bucket: "bibles.makemegod.com", 
+      Body: fileData,
+      Bucket: "bibles.makemegod.com",
       Key: `${fileName}.pdf`,
       Metadata: {
-       "name": name,
+        name: name
       }
-     };
-     // const { err, data } =
-     await new Promise((resolve, reject) => {s3.putObject(params, (err, data) => {
-      if (err) reject(); // an error occurred
-      else     resolve();           // successful response
-     })});
-     console.log("5: Uploaded to s3", name);
-     await exec(`rm -rf ${workDir}`);
+    };
+    // const { err, data } =
+    await new Promise((resolve, reject) => {
+      s3.putObject(params, (err, data) => {
+        if (err) reject();
+        // an error occurred
+        else resolve(); // successful response
+      });
+    });
+    console.log("5: Uploaded to s3", name);
+    await exec(`rm -rf ${workDir}`);
   } catch (err) {
     console.log(err);
   } finally {
