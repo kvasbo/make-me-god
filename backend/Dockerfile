@@ -1,9 +1,8 @@
 # docker build -t kvasbo/makemegod:latest .
-FROM node:8
-MAINTAINER Audun Kvasbø <audun@kvasbo.no>
+FROM node:lts
+# MAINTAINER Audun Kvasbø <audun@kvasbo.no>
 
-RUN apt-get update
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
 	texlive \
   curl \
   sudo \
