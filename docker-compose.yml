@@ -2,9 +2,8 @@ version: "3"
 
 services:
   backend:
-    container_name: makemegod-backend
+    container_name: makemegod
     build:
-      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
