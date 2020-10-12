@@ -24,7 +24,6 @@ COPY ./templates /makemegod/templates/
 COPY ./service/index.js /makemegod/service
 COPY ./service/package.json /makemegod/service
 COPY ./service/yarn.lock /makemegod/service
-COPY ./service/awsCredentials.json /makemegod/service
 
 RUN yarn
 
