@@ -1,2 +1,3 @@
 latexoutput.txt
 awsCredentials.json
+*.code-workspace
