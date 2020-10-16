@@ -1,8 +1,9 @@
-const util = require("util");
+import util from "util";
 const exec = util.promisify(require("child_process").exec);
-const uuidv4 = require("uuid/v4");
-const fs = require("fs");
-var express = require("express");
+import { v4 as uuidv4 } from "uuid";
+import fs from "fs";
+import express from "express";
+
 var app = express();
 
 app.get("/", function (req: any, res: any) {
@@ -14,11 +15,18 @@ app.listen(8080, function () {
 });
 
 async function createBible(name: string) {
-  const workDir = `/makemegod/workfiles/${uuidv4()}`;
+  const tmpDir = "./tmp";
+  const workDir = `${tmpDir}/${uuidv4()}`;
   try {
+    await exec(`mkdir ${workDir}`);
     console.log("0: Creating bible:", name);
     const fileName = name;
     const safeName = name;
+    try {
+    } catch (e) {
+      await exec(`mkdir ${tmpDir}`);
+    }
+
     await exec(`mkdir ${workDir}`);
     if (!name) throw Error("No name defined");
     await exec(`echo "s/tullegud/${safeName}/ig" > ${workDir}/${fileName}.sed`);

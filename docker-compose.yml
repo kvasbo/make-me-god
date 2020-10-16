@@ -1,11 +1,12 @@
-version: "3"
+version: "3.2"
 
 services:
   backend:
     container_name: makemegod
     build:
       dockerfile: Dockerfile
+      context: .
     ports:
-      - "8080:8080"
+      - "80:8080"
     volumes:
       - ./bibles:/makemegod/bibles
