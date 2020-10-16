@@ -24,6 +24,7 @@ async function createBible(name) {
     const workDir = getWorkDir(name);
     try {
         console.log("0: Creating bible:", name);
+        initStatus(name);
         if (!fs_1.default.existsSync(workDir)) {
             await exec(`mkdir ${workDir}`);
         }
@@ -57,9 +58,11 @@ function initStatus(name) {
     const safeName = createSafeFilename(name);
     if (checkForBible(name)) {
         statuses[safeName] = "done";
+        return true;
     }
     else {
         statuses[safeName] = "init";
+        return false;
     }
 }
 function setStatus(name, status) {

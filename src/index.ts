@@ -34,6 +34,7 @@ async function createBible(name: string) {
 
   try {
     console.log("0: Creating bible:", name);
+    initStatus(name);
 
     // Create work dir
     if (!fs.existsSync(workDir)) {
@@ -71,13 +72,15 @@ async function createBible(name: string) {
   return;
 }
 
-function initStatus(name: string) {
+function initStatus(name: string): boolean {
   //It exists
   const safeName = createSafeFilename(name);
   if (checkForBible(name)) {
     statuses[safeName] = "done";
+    return true;
   } else {
     statuses[safeName] = "init";
+    return false;
   }
 }
 
