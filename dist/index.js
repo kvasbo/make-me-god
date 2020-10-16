@@ -5,9 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
 const exec = util_1.default.promisify(require("child_process").exec);
-const uuid_1 = require("uuid");
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
+const finishedDir = "./bibles";
+const statuses = {};
 var app = express_1.default();
 app.get("/", function (req, res) {
     res.send("Hello World!");
@@ -16,42 +17,32 @@ app.listen(8080, function () {
     console.log("Bible creator listening on port " + 8080 + "!");
 });
 async function createBible(name) {
-    const tmpDir = "./tmp";
-    const workDir = `${tmpDir}/${uuid_1.v4()}`;
+    if (!name)
+        throw Error("No name defined");
+    const fileName = createSafeFilename(name);
+    const safeName = createSafeFilename(name);
+    const workDir = getWorkDir(name);
     try {
-        await exec(`mkdir ${workDir}`);
         console.log("0: Creating bible:", name);
-        const fileName = name;
-        const safeName = name;
-        try {
+        if (!fs_1.default.existsSync(workDir)) {
+            await exec(`mkdir ${workDir}`);
         }
-        catch (e) {
-            await exec(`mkdir ${tmpDir}`);
+        else {
+            console.log("0: Workdir existed, cleaning out");
+            await exec(`rm -rf ${workDir}/*`);
         }
-        await exec(`mkdir ${workDir}`);
-        if (!name)
-            throw Error("No name defined");
+        setStatus(name, "started");
         await exec(`echo "s/tullegud/${safeName}/ig" > ${workDir}/${fileName}.sed`);
         console.log("1: Created SED file");
         await exec(`sed -f ${workDir}/${fileName}.sed /makemegod/templates/template.tex.base > ${workDir}/template.${fileName}.tex`);
         console.log("2: Created bible template .tex file");
         console.log("3: Starting creation...");
+        setStatus(name, "building");
         await exec(`pdflatex -jobname=${fileName} -output-directory ${workDir} ${workDir}/template.${fileName}.tex > ${workDir}/latexoutput.txt`);
         console.log("4: Creation is done", name);
-        const fileData = fs_1.default.readFileSync(`${workDir}/${fileName}.pdf`);
-        var params = {
-            Body: fileData,
-            Bucket: "bibles.makemegod.com",
-            Key: `${fileName}.pdf`,
-            Metadata: {
-                name: name,
-            },
-        };
-        await new Promise((resolve, reject) => {
-            resolve();
-        });
-        console.log("5: Uploaded to s3", name);
-        await exec(`rm -rf ${workDir}`);
+        console.log("5: Cleaning up and copying files");
+        await exec(`mv ${workDir}/${fileName}.pdf /makemegod/bibles`);
+        setStatus(name, "done");
     }
     catch (err) {
         console.log(err);
@@ -62,9 +53,37 @@ async function createBible(name) {
     }
     return;
 }
+function initStatus(name) {
+    const safeName = createSafeFilename(name);
+    if (checkForBible(name)) {
+        statuses[safeName] = "done";
+    }
+    else {
+        statuses[safeName] = "init";
+    }
+}
+function setStatus(name, status) {
+    console.log(`Status: ${name}: ${status}`);
+    const safeName = createSafeFilename(name);
+    statuses[safeName] = status;
+}
 async function init() {
     console.log("starter");
     createBible("Audun");
+}
+function checkForBible(name) {
+    const file = createSafeFilename(name);
+    return fs_1.default.existsSync(getFinishedBiblePath(name));
+}
+function getFinishedBiblePath(name) {
+    const file = createSafeFilename(name);
+    return `${finishedDir}/${file}.pdf`;
+}
+function getWorkDir(name) {
+    return `./tmp/${createSafeFilename(name)}`;
+}
+function createSafeFilename(name) {
+    return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
 init();
 //# sourceMappingURL=index.js.map
