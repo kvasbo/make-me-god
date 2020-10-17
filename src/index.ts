@@ -10,6 +10,10 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
+app.use(express.static("frontend"));
+app.use(express.static("dist/frontend"));
+
+/*
 app.get("/", function (req: any, res: any) {
   res.sendFile(path.join(__dirname + "/frontend/index.html"));
 });
@@ -21,6 +25,7 @@ app.get("/frontend.js", function (req: any, res: any) {
 app.get("/index.css", function (req: any, res: any) {
   res.sendFile(path.join(__dirname + "/frontend/index.css"));
 });
+*/
 
 // Ajax code
 app.get("/bible/:name", function (req: any, res: any) {
@@ -33,7 +38,7 @@ app.get("/bible/:name", function (req: any, res: any) {
 });
 
 app.listen(8080, function () {
-  console.log("Bible creator listening on port " + 8080 + "!");
+  console.log("Backend listening on port " + 8080);
 });
 
 async function createBible(name: string) {
@@ -107,11 +112,6 @@ function setStatus(name: string, status: AllowedStatus) {
   statuses[safeName] = status;
 }
 
-async function init() {
-  console.log("starter");
-  createBible("Audun");
-}
-
 function checkForBible(name: string) {
   const file = createSafeFilename(name);
   return fs.existsSync(getFinishedBiblePath(name));
@@ -129,5 +129,3 @@ function getWorkDir(name: string) {
 function createSafeFilename(name: string) {
   return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
-
-init();

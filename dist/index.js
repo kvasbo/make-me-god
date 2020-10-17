@@ -12,22 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
-const path_1 = __importDefault(require("path"));
 const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
-app.get("/", function (req, res) {
-    res.sendFile(path_1.default.join(__dirname + "/frontend/index.html"));
-});
-app.get("/frontend.js", function (req, res) {
-    res.sendFile(path_1.default.join(__dirname + "/dist/frontend.js"));
-});
-app.get("/index.css", function (req, res) {
-    res.sendFile(path_1.default.join(__dirname + "/frontend/index.css"));
-});
+app.use(express_1.default.static("frontend"));
+app.use(express_1.default.static("dist/frontend"));
 app.get("/bible/:name", function (req, res) {
     const status = getStatusOrStart(req.params.name);
     const result = {
@@ -37,7 +29,7 @@ app.get("/bible/:name", function (req, res) {
     res.status(201).json(result);
 });
 app.listen(8080, function () {
-    console.log("Bible creator listening on port " + 8080 + "!");
+    console.log("Backend listening on port " + 8080);
 });
 function createBible(name) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -99,12 +91,6 @@ function setStatus(name, status) {
     const safeName = createSafeFilename(name);
     statuses[safeName] = status;
 }
-function init() {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log("starter");
-        createBible("Audun");
-    });
-}
 function checkForBible(name) {
     const file = createSafeFilename(name);
     return fs_1.default.existsSync(getFinishedBiblePath(name));
@@ -119,5 +105,4 @@ function getWorkDir(name) {
 function createSafeFilename(name) {
     return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
-init();
 //# sourceMappingURL=index.js.map
