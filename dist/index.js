@@ -21,13 +21,17 @@ const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
 app.get("/bible/:name", function (req, res) {
-    const status = getStatusOrStart(req.params.name);
+    const name = decodeURIComponent(req.params.name);
+    if (name.length < 1) {
+        res.status(403).json({ error: "No name" });
+    }
+    const status = getStatusOrStart(name);
     const result = {
         status,
-        name: req.params.name,
+        name,
     };
     if (status === "done") {
-        const filename = createSafeFilename(req.params.name);
+        const filename = createSafeFilename(name);
         result.url = `bibles/${filename}.pdf`;
     }
     res.status(201).json(result);

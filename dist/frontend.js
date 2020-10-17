@@ -11,7 +11,8 @@ function attachButtonListener() {
     });
 }
 function getBible(name) {
-    $.getJSON(`bible/${name}`).done((result) => {
+    const nameUrl = encodeURIComponent(name);
+    $.getJSON(`bible/${nameUrl}`).done((result) => {
         handleResult(result, name);
     });
 }

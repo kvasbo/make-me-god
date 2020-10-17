@@ -14,7 +14,8 @@ function attachButtonListener() {
 
 function getBible(name: string) {
   // Start
-  $.getJSON(`bible/${name}`).done((result: any) => {
+  const nameUrl = encodeURIComponent(name);
+  $.getJSON(`bible/${nameUrl}`).done((result: any) => {
     handleResult(result, name);
   });
 }
