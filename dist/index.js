@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
 const path_1 = __importDefault(require("path"));
+const mime_1 = __importDefault(require("mime"));
 const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
@@ -31,8 +32,12 @@ app.get("/bible/:name", function (req, res) {
     }
     res.status(201).json(result);
 });
+app.get("/frontend.js", function (req, res) {
+    const file = path_1.default.join(__dirname + "/frontend.js");
+    res.set("Content-Type", mime_1.default.getType(file));
+    res.sendFile(file);
+});
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
-app.use("/scripts", express_1.default.static(path_1.default.join(__dirname, "/dist/")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
 app.listen(8080, function () {
     console.log("Backend listening on port " + 8080);
@@ -99,7 +104,7 @@ function setStatus(name, status) {
 }
 function checkForBible(name) {
     const file = createSafeFilename(name);
-    return fs_1.default.existsSync(getFinishedBiblePath(name));
+    return fs_1.default.existsSync(getFinishedBiblePath(file));
 }
 function getFinishedBiblePath(name) {
     const file = createSafeFilename(name);

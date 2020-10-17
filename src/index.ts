@@ -1,5 +1,6 @@
 import util from "util";
 import path from "path";
+import mime from "mime";
 const exec = util.promisify(require("child_process").exec);
 import fs from "fs";
 import express from "express";
@@ -24,8 +25,13 @@ app.get("/bible/:name", function (req: any, res: any) {
   res.status(201).json(result);
 });
 
+app.get("/frontend.js", function (req: any, res: any) {
+  const file = path.join(__dirname + "/frontend.js");
+  res.set("Content-Type", mime.getType(file));
+  res.sendFile(file);
+});
+
 app.use("/", express.static(path.join(__dirname, "/frontend/")));
-app.use("/scripts", express.static(path.join(__dirname, "/dist/")));
 app.use("/bibles", express.static(path.join(__dirname, "/bibles/")));
 
 app.listen(8080, function () {
@@ -105,7 +111,7 @@ function setStatus(name: string, status: AllowedStatus) {
 
 function checkForBible(name: string) {
   const file = createSafeFilename(name);
-  return fs.existsSync(getFinishedBiblePath(name));
+  return fs.existsSync(getFinishedBiblePath(file));
 }
 
 function getFinishedBiblePath(name: string): string {
