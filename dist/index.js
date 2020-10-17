@@ -19,9 +19,6 @@ const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
-app.get("/frontend.js", function (req, res) {
-    res.sendFile(path_1.default.join(__dirname + "/frontend.js"));
-});
 app.get("/bible/:name", function (req, res) {
     const status = getStatusOrStart(req.params.name);
     const result = {
@@ -35,6 +32,7 @@ app.get("/bible/:name", function (req, res) {
     res.status(201).json(result);
 });
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "frontend")));
+app.use("/", express_1.default.static(path_1.default.join(__dirname, "dist")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "bibles")));
 app.listen(8080, function () {
     console.log("Backend listening on port " + 8080);

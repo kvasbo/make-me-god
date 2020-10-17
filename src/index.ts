@@ -10,10 +10,6 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
-app.get("/frontend.js", function (req: any, res: any) {
-  res.sendFile(path.join(__dirname + "/frontend.js"));
-});
-
 // Ajax code
 app.get("/bible/:name", function (req: any, res: any) {
   const status = getStatusOrStart(req.params.name);
@@ -29,6 +25,7 @@ app.get("/bible/:name", function (req: any, res: any) {
 });
 
 app.use("/", express.static(path.join(__dirname, "frontend")));
+app.use("/", express.static(path.join(__dirname, "dist")));
 app.use("/bibles", express.static(path.join(__dirname, "bibles")));
 
 app.listen(8080, function () {
