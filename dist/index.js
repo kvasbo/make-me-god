@@ -4,15 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
+const path_1 = __importDefault(require("path"));
 const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
-express_1.default.static("./frontend/", {});
 app.get("/", function (req, res) {
-    res.send("Hello World!");
+    res.sendFile(path_1.default.join(__dirname + "/frontend/index.html"));
+});
+app.get("/frontend.js", function (req, res) {
+    res.sendFile(path_1.default.join(__dirname + "/dist/frontend.js"));
+});
+app.get("/index.css", function (req, res) {
+    res.sendFile(path_1.default.join(__dirname + "/frontend/index.css"));
 });
 app.listen(8080, function () {
     console.log("Bible creator listening on port " + 8080 + "!");

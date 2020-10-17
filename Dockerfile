@@ -30,6 +30,7 @@ CMD [ "node", "index.js" ]
 EXPOSE 8080
 
 COPY ./dist/* /makemegod/
+COPY ./frontend/* /makemegod/frontend/
 
 # RUN npx tsc --build tsconfig.json
 

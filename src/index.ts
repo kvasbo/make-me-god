@@ -1,4 +1,5 @@
 import util from "util";
+import path from "path";
 const exec = util.promisify(require("child_process").exec);
 // import { exec } from "child_process";
 import fs from "fs";
@@ -15,10 +16,16 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
-express.static("./frontend/", {});
-
 app.get("/", function (req: any, res: any) {
-  res.send("Hello World!");
+  res.sendFile(path.join(__dirname + "/frontend/index.html"));
+});
+
+app.get("/frontend.js", function (req: any, res: any) {
+  res.sendFile(path.join(__dirname + "/dist/frontend.js"));
+});
+
+app.get("/index.css", function (req: any, res: any) {
+  res.sendFile(path.join(__dirname + "/frontend/index.css"));
 });
 
 app.listen(8080, function () {
