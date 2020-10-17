@@ -1,15 +1,9 @@
 import util from "util";
 import path from "path";
 const exec = util.promisify(require("child_process").exec);
-// import { exec } from "child_process";
 import fs from "fs";
 import express from "express";
-
-type AllowedStatus = "init" | "started" | "building" | "cleaning" | "done";
-
-interface BibleStatuses {
-  [s: string]: AllowedStatus;
-}
+import { AllowedStatus, BibleStatuses, AjaxReply } from "./types";
 
 const finishedDir = "./bibles";
 const statuses: BibleStatuses = {};
@@ -28,6 +22,16 @@ app.get("/index.css", function (req: any, res: any) {
   res.sendFile(path.join(__dirname + "/frontend/index.css"));
 });
 
+// Ajax code
+app.get("/bible/:name", function (req: any, res: any) {
+  const status = getStatusOrStart(req.params.name);
+  const result: AjaxReply = {
+    status,
+    name: req.params.name,
+  };
+  res.status(201).json(result);
+});
+
 app.listen(8080, function () {
   console.log("Bible creator listening on port " + 8080 + "!");
 });
@@ -42,43 +46,47 @@ async function createBible(name: string) {
   const workDir = getWorkDir(name);
 
   try {
-    console.log("0: Creating bible:", name);
-    initStatus(name);
-
     // Create work dir
     if (!fs.existsSync(workDir)) {
       await exec(`mkdir ${workDir}`);
     } else {
-      console.log("0: Workdir existed, cleaning out");
       await exec(`rm -rf ${workDir}/*`);
     }
 
     setStatus(name, "started");
 
     await exec(`echo "s/tullegud/${safeName}/ig" > ${workDir}/${fileName}.sed`);
-    console.log("1: Created SED file");
+
     await exec(
       `sed -f ${workDir}/${fileName}.sed /makemegod/templates/template.tex.base > ${workDir}/template.${fileName}.tex`
     );
-    console.log("2: Created bible template .tex file");
-    console.log("3: Starting creation...");
 
     setStatus(name, "building");
     await exec(
       `pdflatex -jobname=${fileName} -output-directory ${workDir} ${workDir}/template.${fileName}.tex > ${workDir}/latexoutput.txt`
     );
-    console.log("4: Creation is done", name);
 
-    console.log("5: Cleaning up and copying files");
     await exec(`mv ${workDir}/${fileName}.pdf /makemegod/bibles`);
     setStatus(name, "done");
   } catch (err) {
     console.log(err);
   } finally {
     await exec(`rm -rf ${workDir}`);
-    console.log("6: Cleaned up work dir", name);
   }
   return;
+}
+
+function getStatusOrStart(name: string): AllowedStatus {
+  const safeName = createSafeFilename(name);
+  if (!statuses[safeName]) {
+    const exists = initStatus(name);
+    if (!exists) {
+      createBible(name);
+    }
+    return statuses[safeName];
+  } else {
+    return statuses[safeName];
+  }
 }
 
 function initStatus(name: string): boolean {
