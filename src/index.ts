@@ -15,6 +15,8 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
+express.static("./frontend/", {});
+
 app.get("/", function (req: any, res: any) {
   res.send("Hello World!");
 });

@@ -10,6 +10,7 @@ const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
+express_1.default.static("./frontend/", {});
 app.get("/", function (req, res) {
     res.send("Hello World!");
 });
