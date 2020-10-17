@@ -24,9 +24,9 @@ app.get("/bible/:name", function (req: any, res: any) {
   res.status(201).json(result);
 });
 
-app.use("/", express.static(path.join(__dirname, "frontend")));
-app.use("/scripts", express.static(path.join(__dirname, "dist")));
-app.use("/bibles", express.static(path.join(__dirname, "bibles")));
+app.use("/", express.static(path.join(__dirname, "/frontend/")));
+app.use("/scripts", express.static(path.join(__dirname, "/dist/")));
+app.use("/bibles", express.static(path.join(__dirname, "/bibles/")));
 
 app.listen(8080, function () {
   console.log("Backend listening on port " + 8080);
