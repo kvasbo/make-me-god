@@ -2,5 +2,4 @@ latexoutput.txt
 awsCredentials.json
 *.code-workspace
 tmp
-bibles/*
-*.pdf
+bibles
