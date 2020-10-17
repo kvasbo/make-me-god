@@ -25,7 +25,7 @@ app.get("/bible/:name", function (req: any, res: any) {
 });
 
 app.use("/", express.static(path.join(__dirname, "frontend")));
-app.use("/", express.static(path.join(__dirname, "dist")));
+app.use("/scripts", express.static(path.join(__dirname, "dist")));
 app.use("/bibles", express.static(path.join(__dirname, "bibles")));
 
 app.listen(8080, function () {

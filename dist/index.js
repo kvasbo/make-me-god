@@ -32,7 +32,7 @@ app.get("/bible/:name", function (req, res) {
     res.status(201).json(result);
 });
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "frontend")));
-app.use("/", express_1.default.static(path_1.default.join(__dirname, "dist")));
+app.use("/scripts", express_1.default.static(path_1.default.join(__dirname, "dist")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "bibles")));
 app.listen(8080, function () {
     console.log("Backend listening on port " + 8080);
