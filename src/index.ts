@@ -10,22 +10,9 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
-app.use(express.static("frontend"));
-app.use(express.static("dist/frontend"));
-
-/*
-app.get("/", function (req: any, res: any) {
-  res.sendFile(path.join(__dirname + "/frontend/index.html"));
-});
-
 app.get("/frontend.js", function (req: any, res: any) {
-  res.sendFile(path.join(__dirname + "/dist/frontend.js"));
+  res.sendFile(path.join(__dirname + "/frontend.js"));
 });
-
-app.get("/index.css", function (req: any, res: any) {
-  res.sendFile(path.join(__dirname + "/frontend/index.css"));
-});
-*/
 
 // Ajax code
 app.get("/bible/:name", function (req: any, res: any) {
@@ -34,8 +21,15 @@ app.get("/bible/:name", function (req: any, res: any) {
     status,
     name: req.params.name,
   };
+  if (status === "done") {
+    const filename = createSafeFilename(name);
+    result.url = `bibles/${filename}.pdf`;
+  }
   res.status(201).json(result);
 });
+
+app.use("/", express.static(path.join(__dirname, "frontend")));
+app.use("/bibles", express.static(path.join(__dirname, "bibles")));
 
 app.listen(8080, function () {
   console.log("Backend listening on port " + 8080);

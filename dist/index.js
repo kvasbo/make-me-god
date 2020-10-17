@@ -12,22 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
+const path_1 = __importDefault(require("path"));
 const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
-app.use(express_1.default.static("frontend"));
-app.use(express_1.default.static("dist/frontend"));
+app.get("/frontend.js", function (req, res) {
+    res.sendFile(path_1.default.join(__dirname + "/frontend.js"));
+});
 app.get("/bible/:name", function (req, res) {
     const status = getStatusOrStart(req.params.name);
     const result = {
         status,
         name: req.params.name,
     };
+    if (status === "done") {
+        const filename = createSafeFilename(name);
+        result.url = `bibles/${filename}.pdf`;
+    }
     res.status(201).json(result);
 });
+app.use("/", express_1.default.static(path_1.default.join(__dirname, "frontend")));
+app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "bibles")));
 app.listen(8080, function () {
     console.log("Backend listening on port " + 8080);
 });
