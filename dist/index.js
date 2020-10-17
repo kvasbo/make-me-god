@@ -29,7 +29,7 @@ app.get("/bible/:name", function (req, res) {
         name: req.params.name,
     };
     if (status === "done") {
-        const filename = createSafeFilename(name);
+        const filename = createSafeFilename(req.params.name);
         result.url = `bibles/${filename}.pdf`;
     }
     res.status(201).json(result);

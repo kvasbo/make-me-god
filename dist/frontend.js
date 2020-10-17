@@ -1,4 +1,5 @@
 $(() => {
+    $("#form").fadeIn();
     attachButtonListener();
 });
 function attachButtonListener() {
@@ -17,10 +18,16 @@ function getBible(name) {
 function handleResult(result, name) {
     console.log(result);
     if (result.status !== "done" && result.status !== "error") {
+        $("#form").hide();
+        $("#working").show();
+        $("#download").hide();
         setTimeout(() => getBible(name), 1000);
     }
     else {
-        console.log("done!");
+        $("#link").html(`<a href="${result.url}">Download bible</a>`);
+        $("#form").hide();
+        $("#working").hide();
+        $("#download").show();
     }
 }
 //# sourceMappingURL=frontend.js.map

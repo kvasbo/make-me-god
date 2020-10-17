@@ -1,4 +1,5 @@
 $(() => {
+  $("#form").fadeIn();
   attachButtonListener();
 });
 
@@ -21,9 +22,16 @@ function getBible(name: string) {
 function handleResult(result: any, name: string) {
   console.log(result);
   if (result.status !== "done" && result.status !== "error") {
-    // Keep running every second
+    // Is working
+    $("#form").hide();
+    $("#working").show();
+    $("#download").hide();
     setTimeout(() => getBible(name), 1000);
   } else {
-    console.log("done!");
+    // Is done
+    $("#link").html(`<a href="${result.url}">Download bible</a>`);
+    $("#form").hide();
+    $("#working").hide();
+    $("#download").show();
   }
 }

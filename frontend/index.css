@@ -12,7 +12,13 @@ body {
     height: 100vh;
 }
 
-#content {
+.content {
     display: flex;
     flex-direction: column;
+}
+
+#done,
+#form,
+#working {
+    display: none;
 }
