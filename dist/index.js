@@ -13,12 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
 const path_1 = __importDefault(require("path"));
-const mime_1 = __importDefault(require("mime"));
 const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
 const finishedDir = "./bibles";
 const statuses = {};
+express_1.default.static.mime.define({ "application/pdf": ["pdf"] });
+express_1.default.static.mime.define({ "text/javascript": ["js"] });
 var app = express_1.default();
 app.get("/bible/:name", function (req, res) {
     const name = decodeURIComponent(req.params.name).substring(0, 40);
@@ -36,17 +37,8 @@ app.get("/bible/:name", function (req, res) {
     }
     res.status(200).json(result);
 });
-app.get("/frontend.js", function (req, res) {
-    const file = path_1.default.join(__dirname + "/frontend.js");
-    res.set("Content-Type", mime_1.default.getType(file));
-    res.sendFile(file);
-});
-app.get("/frontend.js.map", function (req, res) {
-    const file = path_1.default.join(__dirname + "/frontend.js.map");
-    res.set("Content-Type", mime_1.default.getType(file));
-    res.sendFile(file);
-});
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
+app.use("/scripts", express_1.default.static(path_1.default.join(__dirname, "/dist/")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
 app.listen(8080, function () {
     console.log("God listening on port " + 8080);
