@@ -47,6 +47,7 @@ app.get("/frontend.js.map", function (req, res) {
     res.sendFile(file);
 });
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
+app.use("/frontend", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
 app.listen(8080, function () {
     console.log("Backend listening on port " + 8080);

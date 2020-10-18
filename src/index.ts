@@ -11,7 +11,7 @@ const statuses: BibleStatuses = {};
 
 var app = express();
 
-// Ajax code
+// Endpoint for creating bibles
 app.get("/bible/:name", function (req: any, res: any) {
   // Clean up and cut off.
   const name = decodeURIComponent(req.params.name).substring(0, 40);
@@ -27,7 +27,7 @@ app.get("/bible/:name", function (req: any, res: any) {
     const filename = createSafeFilename(name);
     result.url = `bibles/${filename}.pdf`;
   }
-  res.status(201).json(result);
+  res.status(200).json(result);
 });
 
 app.get("/frontend.js", function (req: any, res: any) {
@@ -46,7 +46,7 @@ app.use("/", express.static(path.join(__dirname, "/frontend/")));
 app.use("/bibles", express.static(path.join(__dirname, "/bibles/")));
 
 app.listen(8080, function () {
-  console.log("Backend listening on port " + 8080);
+  console.log("God listening on port " + 8080);
 });
 
 async function createBible(name: string) {
