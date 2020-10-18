@@ -30,7 +30,9 @@ function handleResult(result: any, name: string) {
     setTimeout(() => getBible(name), 1000);
   } else {
     // Is done
-    $("#link").html(`<a href="${result.url}">Download bible</a>`);
+    $("#link").html(
+      `<a href="${result.url}" target="_blank">Download bible</a>`
+    );
     $("#form").hide();
     $("#working").hide();
     $("#download").show();
