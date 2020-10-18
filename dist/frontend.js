@@ -2,6 +2,7 @@ $(() => {
     $("#form").fadeIn();
     attachButtonListener();
 });
+let loops = 0;
 function attachButtonListener() {
     $("#submit").on("click", () => {
         const name = $("#name").val().toString();
@@ -18,13 +19,18 @@ function getBible(name) {
 }
 function handleResult(result, name) {
     console.log(result);
+    loops += 1;
     if (result.status !== "done" && result.status !== "error") {
+        let workString = "Working";
+        for (let i = 0; i < loops; i++) {
+            workString += ".";
+        }
         $("#form").hide();
-        $("#working").show();
+        $("#working").html(workString).show();
         $("#download").hide();
         setTimeout(() => getBible(name), 1000);
     }
-    else {
+    else if (result.status === "done") {
         $("#link").html(`<a href="${result.url}" target="_blank">Download bible</a>`);
         $("#form").hide();
         $("#working").hide();
