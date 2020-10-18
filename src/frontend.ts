@@ -12,6 +12,9 @@ function attachButtonListener() {
       getBible(name);
     }
   });
+  $(".reset").on("click", () => {
+    location.reload();
+  });
 }
 
 function getBible(name: string) {
@@ -38,7 +41,7 @@ function handleResult(result: any, name: string) {
   } else if (result.status === "done") {
     // Is done
     $("#link").html(
-      `<a href="${result.url}" target="_blank">Download bible</a>`
+      `<a href="${result.url}" target="_blank">Download bible</a> (<span style="text-decoration: underline; color: #777777" class="reset">make another</span>)`
     );
     $("#form").hide();
     $("#working").hide();
