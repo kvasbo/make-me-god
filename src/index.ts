@@ -1,6 +1,5 @@
 import util from "util";
 import path from "path";
-import mime from "mime";
 const exec = util.promisify(require("child_process").exec);
 import fs from "fs";
 import express from "express";
