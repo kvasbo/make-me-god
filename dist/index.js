@@ -13,11 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = __importDefault(require("util"));
 const path_1 = __importDefault(require("path"));
-const exec = util_1.default.promisify(require("child_process").exec);
 const fs_1 = __importDefault(require("fs"));
 const express_1 = __importDefault(require("express"));
-const finishedDir = "./bibles";
+const exec = util_1.default.promisify(require("child_process").exec);
+const port = 8080;
+const finishedDir = path_1.default.join(__dirname, "bibles");
+const tmpDir = path_1.default.join(__dirname, "tmp");
+const cleanupAfterHours = 1;
+const cleanupIntervalInSeconds = 3600;
 const statuses = {};
+setInterval(() => cleanupOldFiles(), 1000 * cleanupIntervalInSeconds);
+cleanupOldFiles();
 express_1.default.static.mime.define({ "application/pdf": ["pdf"] });
 express_1.default.static.mime.define({ "text/javascript": ["js"] });
 var app = express_1.default();
@@ -32,33 +38,40 @@ app.get("/bible/:name", function (req, res) {
         name,
     };
     if (status === "done") {
-        const filename = createSafeFilename(name);
-        result.url = `bibles/${filename}.pdf`;
+        result.url = `bibles/${createSafeFilename(name)}.pdf`;
+        deleteStatus(name);
     }
     res.status(200).json(result);
 });
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
 app.use("/scripts", express_1.default.static(path_1.default.join(__dirname, "/dist/")));
-app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
-app.listen(8080, function () {
-    console.log("God listening on port " + 8080);
+app.use("/bibles", express_1.default.static(finishedDir));
+app.listen(port, function () {
+    console.log(`God listening on port ${port}`);
 });
-function createBible(name) {
+function getStatusOrStart(name) {
+    const safeName = createSafeFilename(name);
+    if (!statuses[safeName]) {
+        const exists = initStatus(safeName);
+        if (!exists) {
+            createBible(name);
+        }
+        return statuses[safeName];
+    }
+    else {
+        return statuses[safeName];
+    }
+}
+function createBible(name = "Kiwibob") {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!name)
-            throw Error("No name defined");
         const fileName = createSafeFilename(name);
-        const safeName = name;
-        const workDir = getWorkDir(name);
+        const workDir = `${tmpDir}/${createSafeFilename(name)}`;
         try {
             if (!fs_1.default.existsSync(workDir)) {
                 yield exec(`mkdir ${workDir}`);
             }
-            else {
-                yield exec(`rm -rf ${workDir}/*`);
-            }
             setStatus(name, "started");
-            yield exec(`echo "s/tullegud/${safeName}/ig" > ${workDir}/${fileName}.sed`);
+            yield exec(`echo "s/tullegud/${name}/ig" > ${workDir}/${fileName}.sed`);
             yield exec(`sed -f ${workDir}/${fileName}.sed /makemegod/templates/template.tex.base > ${workDir}/template.${fileName}.tex`);
             setStatus(name, "building");
             yield exec(`pdflatex -jobname=${fileName} -output-directory ${workDir} ${workDir}/template.${fileName}.tex > ${workDir}/latexoutput.txt`);
@@ -74,18 +87,9 @@ function createBible(name) {
         return;
     });
 }
-function getStatusOrStart(name) {
+function deleteStatus(name) {
     const safeName = createSafeFilename(name);
-    if (!statuses[safeName]) {
-        const exists = initStatus(safeName);
-        if (!exists) {
-            createBible(name);
-        }
-        return statuses[safeName];
-    }
-    else {
-        return statuses[safeName];
-    }
+    delete statuses[safeName];
 }
 function initStatus(name) {
     const safeName = createSafeFilename(name);
@@ -111,9 +115,37 @@ function getFinishedBiblePath(name) {
     const file = createSafeFilename(name);
     return `${finishedDir}/${file}.pdf`;
 }
-function getWorkDir(name) {
-    return `./tmp/${createSafeFilename(name)}`;
-}
 function createSafeFilename(name) {
     return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
+function cleanupOldFiles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(`Cleaning files older than ${cleanupAfterHours} hour(s).`);
+        const threshold = Date.now() - cleanupAfterHours * 60 * 60 * 1000;
+        fs_1.default.readdir(finishedDir, function (err, files) {
+            if (err) {
+                return console.log("Unable to scan directory: " + err);
+            }
+            files.forEach(function (file) {
+                try {
+                    const path = `${finishedDir}/${file}`;
+                    const stats = fs_1.default.statSync(path);
+                    const fileTime = stats.mtime.valueOf();
+                    if (fileTime < threshold) {
+                        fs_1.default.unlink(path, (err) => {
+                            if (err) {
+                                console.error(err);
+                                return;
+                            }
+                            console.log(`Deleted file: ${path}`);
+                        });
+                    }
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            });
+        });
+    });
+}
+//# sourceMappingURL=index.js.map

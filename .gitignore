@@ -2,3 +2,4 @@ latexoutput.txt
 *.code-workspace
 tmp
 bibles
+dist

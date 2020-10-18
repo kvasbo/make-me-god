@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "removeComments": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "skipLibCheck": true,
     "lib": ["es2018", "DOM"],
     "outDir": "./dist"
