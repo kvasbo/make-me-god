@@ -1,12 +1,7 @@
-# docker build -t kvasbo/makemegod:latest .
 FROM node:lts
-# MAINTAINER Audun Kvasbø <audun@kvasbo.no>
 
 RUN apt-get update && apt-get install -y \
-	texlive \
-  curl \
-  sudo \
-  nano
+	texlive
 
 RUN yarn global add npx
 
@@ -16,15 +11,16 @@ WORKDIR /makemegod
 COPY . /makemegod
 
 # Create work folder and copy files
-
 RUN mkdir -p /makemegod/bibles
 RUN mkdir -p /makemegod/tmp
-# RUN mkdir -p /makemegod/frontend
 
+# Install stuff
 RUN yarn
 
+# Build typescript
 RUN npx tsc --build tsconfig.json
 
+# Copy main file to root due to lazyness
 RUN cp ./dist/index.js .
 
 CMD [ "node", "index.js" ]
