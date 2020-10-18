@@ -28,7 +28,7 @@ function handleResult(result: any, name: string) {
   const dots = loops % 5;
   if (result.status !== "done" && result.status !== "error") {
     // Is working
-    let workString = "Working";
+    let workString = "Creation is underway";
     for (let i = 0; i < dots; i++) {
       workString += ".";
     }
