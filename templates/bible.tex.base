@@ -1,8 +1,8 @@
-\title{the Holy Bible}
-\documentclass[8pt, a4, twoside,openleft, twocolumn]{book}
+\title{The Holy Bible}
+\documentclass[8pt, a4, twoside, openleft, twocolumn]{book}
 
-%\usepackage[utf8]{inputenc}
-\usepackage[latin1]{inputenc}	% valg av tegnsett
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}	% valg av tegnsett
 \usepackage[english]{babel}		% engelske titler
 
 \textheight 215mm

@@ -21,7 +21,7 @@ const finishedDir = "./bibles";
 const statuses = {};
 var app = express_1.default();
 app.get("/bible/:name", function (req, res) {
-    const name = decodeURIComponent(req.params.name);
+    const name = decodeURIComponent(req.params.name).substring(0, 40);
     if (name.length < 1) {
         res.status(403).json({ error: "No name" });
     }

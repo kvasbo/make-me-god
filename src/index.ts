@@ -13,7 +13,8 @@ var app = express();
 
 // Ajax code
 app.get("/bible/:name", function (req: any, res: any) {
-  const name = decodeURIComponent(req.params.name);
+  // Clean up and cut off.
+  const name = decodeURIComponent(req.params.name).substring(0, 40);
   if (name.length < 1) {
     res.status(403).json({ error: "No name" });
   }
