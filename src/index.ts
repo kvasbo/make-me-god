@@ -9,6 +9,9 @@ import { AllowedStatus, BibleStatuses, AjaxReply } from "./types";
 const finishedDir = "./bibles";
 const statuses: BibleStatuses = {};
 
+express.static.mime.define({ "application/pdf": ["pdf"] });
+express.static.mime.define({ "text/javascript": ["js"] });
+
 var app = express();
 
 // Endpoint for creating bibles
@@ -30,19 +33,8 @@ app.get("/bible/:name", function (req: any, res: any) {
   res.status(200).json(result);
 });
 
-app.get("/frontend.js", function (req: any, res: any) {
-  const file = path.join(__dirname + "/frontend.js");
-  res.set("Content-Type", mime.getType(file));
-  res.sendFile(file);
-});
-
-app.get("/frontend.js.map", function (req: any, res: any) {
-  const file = path.join(__dirname + "/frontend.js.map");
-  res.set("Content-Type", mime.getType(file));
-  res.sendFile(file);
-});
-
 app.use("/", express.static(path.join(__dirname, "/frontend/")));
+app.use("/scripts", express.static(path.join(__dirname, "/dist/")));
 app.use("/bibles", express.static(path.join(__dirname, "/bibles/")));
 
 app.listen(8080, function () {
