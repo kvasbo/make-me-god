@@ -19,7 +19,6 @@ body {
 }
 
 #done,
-#form,
 #working {
     display: none;
 }
