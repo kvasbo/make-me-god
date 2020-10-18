@@ -35,6 +35,12 @@ app.get("/frontend.js", function (req: any, res: any) {
   res.sendFile(file);
 });
 
+app.get("/frontend.js.map", function (req: any, res: any) {
+  const file = path.join(__dirname + "/frontend.js.map");
+  res.set("Content-Type", mime.getType(file));
+  res.sendFile(file);
+});
+
 app.use("/", express.static(path.join(__dirname, "/frontend/")));
 app.use("/bibles", express.static(path.join(__dirname, "/bibles/")));
 

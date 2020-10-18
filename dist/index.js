@@ -41,6 +41,11 @@ app.get("/frontend.js", function (req, res) {
     res.set("Content-Type", mime_1.default.getType(file));
     res.sendFile(file);
 });
+app.get("/frontend.js.map", function (req, res) {
+    const file = path_1.default.join(__dirname + "/frontend.js.map");
+    res.set("Content-Type", mime_1.default.getType(file));
+    res.sendFile(file);
+});
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
 app.listen(8080, function () {
@@ -120,4 +125,3 @@ function getWorkDir(name) {
 function createSafeFilename(name) {
     return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
-//# sourceMappingURL=index.js.map
