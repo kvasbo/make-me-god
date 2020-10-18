@@ -10,9 +10,6 @@ function attachButtonListener() {
             getBible(name);
         }
     });
-    $(".reset").on("click", () => {
-        location.reload();
-    });
 }
 function getBible(name) {
     const nameUrl = encodeURIComponent(name);
@@ -23,9 +20,10 @@ function getBible(name) {
 function handleResult(result, name) {
     console.log(result);
     loops += 1;
+    const dots = loops % 5;
     if (result.status !== "done" && result.status !== "error") {
         let workString = "Working";
-        for (let i = 0; i < loops; i++) {
+        for (let i = 0; i < dots; i++) {
             workString += ".";
         }
         $("#form").hide();
@@ -34,7 +32,7 @@ function handleResult(result, name) {
         setTimeout(() => getBible(name), 1000);
     }
     else if (result.status === "done") {
-        $("#link").html(`<a href="${result.url}" target="_blank">Download bible</a> (<span style="text-decoration: underline; color: #777777" class="reset">make another</span>)`);
+        $("#link").html(`<a href="${result.url}" target="_blank">Download bible</a>`);
         $("#form").hide();
         $("#working").hide();
         $("#download").show();
