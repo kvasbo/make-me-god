@@ -34,7 +34,7 @@ app.get("/bible/:name", function (req, res) {
         const filename = createSafeFilename(name);
         result.url = `bibles/${filename}.pdf`;
     }
-    res.status(201).json(result);
+    res.status(200).json(result);
 });
 app.get("/frontend.js", function (req, res) {
     const file = path_1.default.join(__dirname + "/frontend.js");
@@ -47,10 +47,9 @@ app.get("/frontend.js.map", function (req, res) {
     res.sendFile(file);
 });
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
-app.use("/frontend", express_1.default.static(path_1.default.join(__dirname, "/frontend/")));
 app.use("/bibles", express_1.default.static(path_1.default.join(__dirname, "/bibles/")));
 app.listen(8080, function () {
-    console.log("Backend listening on port " + 8080);
+    console.log("God listening on port " + 8080);
 });
 function createBible(name) {
     return __awaiter(this, void 0, void 0, function* () {
