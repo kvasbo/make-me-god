@@ -53,7 +53,7 @@ async function createBible(name: string) {
   if (!name) throw Error("No name defined");
 
   const fileName = createSafeFilename(name);
-  const safeName = createSafeFilename(name);
+  const safeName = name;
 
   const workDir = getWorkDir(name);
 
@@ -91,7 +91,7 @@ async function createBible(name: string) {
 function getStatusOrStart(name: string): AllowedStatus {
   const safeName = createSafeFilename(name);
   if (!statuses[safeName]) {
-    const exists = initStatus(name);
+    const exists = initStatus(safeName);
     if (!exists) {
       createBible(name);
     }

@@ -56,7 +56,7 @@ function createBible(name) {
         if (!name)
             throw Error("No name defined");
         const fileName = createSafeFilename(name);
-        const safeName = createSafeFilename(name);
+        const safeName = name;
         const workDir = getWorkDir(name);
         try {
             if (!fs_1.default.existsSync(workDir)) {
@@ -85,7 +85,7 @@ function createBible(name) {
 function getStatusOrStart(name) {
     const safeName = createSafeFilename(name);
     if (!statuses[safeName]) {
-        const exists = initStatus(name);
+        const exists = initStatus(safeName);
         if (!exists) {
             createBible(name);
         }
