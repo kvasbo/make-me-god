@@ -3,7 +3,7 @@ name: Build and publish manually
 on:
   push:
     branches:
-      - "master"
+      - master
 
 jobs:
   build_and_push:
@@ -21,6 +21,6 @@ jobs:
         run: docker build -t kvasbo/makemegod .
       - name: Tag image
         run: docker tag kvasbo/makemegod \
-          registry.digitalocean.com/kvasbo/makemegod:latest
+          registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/kvasbo/makemegod:latest
+        run: docker push registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
