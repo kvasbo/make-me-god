@@ -20,7 +20,8 @@ jobs:
       - name: Build image
         run: docker build -t kvasbo/makemegod .
       - name: Tag image
-        run: docker tag kvasbo/makemegod \
-          registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
+        run: docker tag kvasbo/makemegod registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
+      - name: Tag image
+        run: docker tag kvasbo/makemegod registry.digitalocean.com/kvasbo/makemegod:latest
       - name: Push image to DO Container Registry
         run: docker push registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
