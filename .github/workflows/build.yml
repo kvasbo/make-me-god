@@ -1,11 +1,9 @@
 name: Build and publish manually
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Image version"
-        required: true
+  push:
+    branches:
+      - "master"
 
 jobs:
   build_and_push:
@@ -23,6 +21,6 @@ jobs:
         run: docker build -t kvasbo/makemegod .
       - name: Tag image
         run: docker tag kvasbo/makemegod \
-          registry.digitalocean.com/kvasbo/makemegod:${{github.event.inputs.version }}
+          registry.digitalocean.com/kvasbo/makemegod:latest
       - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/kvasbo/makemegod:${{ github.event.inputs.version }}
+        run: docker push registry.digitalocean.com/kvasbo/makemegod:latest
