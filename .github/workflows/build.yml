@@ -11,6 +11,13 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v2
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -26,20 +33,11 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:latest
+          builder: ${{ steps.buildx.outputs.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          tags:
+            - ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:${GITHUB_SHA}
+            - ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      - name: Log in to DO Container Registry
-        run: doctl registry login --expiry-seconds 600
-      - name: Build image
-        run: docker build -t kvasbo/makemegod .
-      - name: Tag image
-        run: docker tag kvasbo/makemegod registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
-      - name: Tag image
-        run: docker tag kvasbo/makemegod registry.digitalocean.com/kvasbo/makemegod:latest
-      - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/kvasbo/makemegod:${GITHUB_SHA}
