@@ -36,6 +36,6 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:${GITHUB_SHA} ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:${GITHUB_SHA}, ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:latest
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
