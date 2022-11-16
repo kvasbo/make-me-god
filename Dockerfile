@@ -25,4 +25,4 @@ RUN cp ./dist/index.js .
 
 CMD [ "node", "index.js" ]
 
-EXPOSE 8080
+EXPOSE 80
