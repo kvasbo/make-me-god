@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: makemegod
-        image: kvasbo/makemegod:latest
+        image: kvasbo/make_me_god:latest
         ports:
         - containerPort: 80
           name: http
