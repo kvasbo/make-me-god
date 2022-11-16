@@ -3,3 +3,4 @@ latexoutput.txt
 tmp
 bibles
 dist/
+node_modules

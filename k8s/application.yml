@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: makemegod
+  labels:
+    app: makemegod
+spec:
+  selector:
+    matchLabels:
+      app: makemegod
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: makemegod
+    spec:
+      containers:
+      - name: makemegod
+        image: kvasbo/makemegod:latest
+        ports:
+        - containerPort: 80
+          name: http

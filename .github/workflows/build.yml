@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -37,5 +37,17 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/make_me_god:latest
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+  deploy-to-k8s:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+      - name: Install Digitalocean Kubernetes
+        uses: matootie/dokube@v1.4.0
+        with:
+          personalAccessToken: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          clusterName: ${{ secrets.K8S_CLUSTER }}
+      - name: Deploy application to Kubernetes
+        run: kubectl apply -f ./k8s/application.yml
+      - name: Setup service
+        run: kubectl apply -f ./k8s/service.yml
