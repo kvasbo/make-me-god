@@ -5,6 +5,16 @@ services:
     container_name: makemegod
     image: kvasbo/makemegod:latest
     ports:
-      - "80:80"
+      - "6666:80"
     volumes:
       - ./bibles:/makemegod/bibles
+  tunnel:
+    container_name: cloudflared-tunnel
+    restart: unless-stopped
+    command: tunnel run --token MY_TOKEN
+    volumes:
+      - ./tunnel:/etc/cloudflared
+networks:
+  default:
+    external:
+      name: makemegod
