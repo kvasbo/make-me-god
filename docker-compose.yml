@@ -10,10 +10,11 @@ services:
       - ./bibles:/makemegod/bibles
   tunnel:
     container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
     restart: unless-stopped
-    command: tunnel run --token MY_TOKEN
-    volumes:
-      - ./tunnel:/etc/cloudflared
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=mytokengoeshere
 networks:
   default:
     external:
