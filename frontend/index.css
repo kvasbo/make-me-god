@@ -22,3 +22,13 @@ body {
 #working {
     display: none;
 }
+
+input, button {
+  border: 1px solid #0F0f0f;
+  margin-bottom: 1em;
+}
+
+input::placeholder {
+  font-weight: bold;
+  text-align: center;
+}
