@@ -8,13 +8,6 @@ services:
       - "6666:80"
     volumes:
       - ./bibles:/makemegod/bibles
-  tunnel:
-    container_name: cloudflared-tunnel
-    image: cloudflare/cloudflared
-    restart: unless-stopped
-    command: tunnel run
-    environment:
-      - TUNNEL_TOKEN=mytokengoeshere
 networks:
   default:
     external:
