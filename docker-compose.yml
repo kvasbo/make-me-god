@@ -10,5 +10,5 @@ services:
       - ./bibles:/makemegod/bibles
 networks:
   default:
-    external:
-      name: kvasbo
+      name: ${NETWORK_NAME}
+      external: true
