@@ -5,7 +5,7 @@ services:
     container_name: makemegod
     image: kvasbo/makemegod:latest
     ports:
-      - "6666:80"
+      - "80:80"
     volumes:
       - ./bibles:/makemegod/bibles
 networks:
