@@ -3,7 +3,7 @@ version: "3.2"
 services:
   backend:
     container_name: makemegod
-    image: kvasbo/makemegod:latest
+    image: kvasbo/make_me_god:latest
     ports:
       - "80:80"
     volumes:
