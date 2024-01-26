@@ -47,9 +47,17 @@ app.get("/bible/:name", function (req: any, res: any) {
 });
 
 // Add some paths
-app.use("/", express.static(path.join(__dirname, "/frontend/")));
+// app.use("/", express.static(path.join(__dirname, "/frontend/")));
 app.use("/scripts", express.static(path.join(__dirname, "/dist/")));
 app.use("/bibles", express.static(finishedDir));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+});
+
+app.get('/index.css', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'index.css'));
+});
 
 // Listen to the port
 app.listen(port, function () {

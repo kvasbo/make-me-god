@@ -23,7 +23,6 @@ function getBible(name: string) {
 }
 
 function handleResult(result: any, name: string) {
-  console.log(result);
   loops += 1;
   const dots = loops % 5;
   if (result.status !== "done" && result.status !== "error") {
