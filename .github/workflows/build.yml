@@ -13,6 +13,9 @@ env:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture: [amd64, arm64, x86]
     permissions:
       contents: read
       packages: write
