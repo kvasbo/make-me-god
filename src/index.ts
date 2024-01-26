@@ -6,8 +6,8 @@ import { AllowedStatus, BibleStatuses, AjaxReply } from "./types";
 const exec = util.promisify(require("child_process").exec);
 
 const port = 80;
-const finishedDir = path.join(__dirname, "bibles");
-const tmpDir = path.join(__dirname, "tmp");
+const finishedDir = path.join(__dirname, "..", "bibles");
+const tmpDir = path.join(__dirname, "..", "tmp");
 const cleanupAfterHours = 1;
 const cleanupIntervalInSeconds = 3600;
 
