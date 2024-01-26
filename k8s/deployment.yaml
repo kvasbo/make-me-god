@@ -14,4 +14,22 @@ spec:
     spec:
       containers:
       - name: makemegod-app
-        image: kvasbo/make_me_god:latest
+        image: ghcr.io/kvasbo/make-me-god:master
+        ports: 
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          timeoutSeconds: 2
+          periodSeconds: 5
+          failureThreshold: 3
