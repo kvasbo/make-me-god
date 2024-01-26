@@ -52,6 +52,7 @@ app.use("/scripts", express.static(path.join(__dirname, "/dist/")));
 app.use("/bibles", express.static(finishedDir));
 
 app.get('/', (req, res) => {
+  console.log("Serving index");
   res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 

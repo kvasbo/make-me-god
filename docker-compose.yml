@@ -2,8 +2,11 @@ version: "3.2"
 
 services:
   makemegod:
-    image: ghcr.io/kvasbo/make-me-god:sha-b65b582
+    build:
+      dockerfile: Dockerfile
+      context: .
     ports:
       - "80:80"
     volumes:
       - ./bibles:/makemegod/bibles
+      - ./dist:/makemegod/dist
