@@ -20,9 +20,6 @@ RUN yarn
 # Build typescript
 RUN npx tsc --build tsconfig.json
 
-# Copy main file to root due to lazyness
-RUN cp ./dist/index.js .
-
-CMD [ "node", "index.js" ]
+CMD [ "node", "/makemegod/dist/index.js" ]
 
 EXPOSE 80

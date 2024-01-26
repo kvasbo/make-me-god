@@ -2,12 +2,8 @@ version: "3.2"
 
 services:
   makemegod:
-    image: kvasbo/make_me_god:latest
+    image: ghcr.io/kvasbo/make-me-god:sha-b65b582
     ports:
-      - "${NETWORK_PORT}:80"
+      - "80:80"
     volumes:
       - ./bibles:/makemegod/bibles
-networks:
-  default:
-      name: ${NETWORK_NAME}
-      external: true
