@@ -223,3 +223,10 @@ async function cleanupOldFiles() {
     });
   });
 }
+
+// Handle sigterm
+process.on("SIGTERM", () => {
+  console.info("SIGTERM signal received.");
+  console.log("Closing http server.");
+  process.exit(0);
+});
