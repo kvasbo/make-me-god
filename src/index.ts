@@ -60,6 +60,10 @@ app.get('/index.css', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend', 'index.css'));
 });
 
+app.get('/bg.jpg', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend', 'bg.jpg'));
+});
+
 app.get('/frontend.js', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend.js'));
 });
