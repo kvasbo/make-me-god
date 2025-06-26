@@ -18,9 +18,7 @@ const statuses: BibleStatuses = {};
 setInterval(() => cleanupOldFiles(), 1000 * cleanupIntervalInSeconds);
 cleanupOldFiles();
 
-// Mimetypes
-express.static.mime.define({ "application/pdf": ["pdf"] });
-express.static.mime.define({ "text/javascript": ["js"] });
+// Mimetypes - Express 5 removed express.static.mime, using express.static with proper headers instead
 
 // Create web server
 var app = express();
@@ -49,7 +47,13 @@ app.get("/bible/:name", function (req: any, res: any) {
 // Add some paths
 // app.use("/", express.static(path.join(__dirname, "/frontend/")));
 // app.use("/scripts", express.static(//));
-app.use("/bibles", express.static(finishedDir));
+app.use("/bibles", express.static(finishedDir, {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.pdf')) {
+      res.setHeader('Content-Type', 'application/pdf');
+    }
+  }
+}));
 
 app.get('/', (req, res) => {
   console.log("Serving index");
@@ -65,6 +69,7 @@ app.get('/bg.jpg', (req, res) => {
 });
 
 app.get('/frontend.js', (req, res) => {
+  res.setHeader('Content-Type', 'text/javascript');
   res.sendFile(path.join(__dirname, 'frontend.js'));
 });
 
